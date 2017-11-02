@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{53D53EBE-C9DD-4E7B-984D-5A5429F7F4CD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AllAboutMovie</RootNamespace>
+    <AssemblyName>AllAboutMovie</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition">
+      <HintPath>..\Library\System.ComponentModel.Composition.dll</HintPath>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit.Extended">
+      <HintPath>..\Library\WPFToolkit.Extended.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AnimatedImage.cs" />
+    <Compile Include="Common\Container.cs" />
+    <Compile Include="Common\IContainer.cs" />
+    <Compile Include="Common\IUIMessageService.cs" />
+    <Compile Include="Common\MEFContainer.cs" />
+    <Compile Include="Common\ValidationRule.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Common\ApplicationInfo.cs" />
+    <Compile Include="Common\ControllerBase.cs" />
+    <Compile Include="Common\IDialogService.cs" />
+    <Compile Include="Common\INavigationService.cs" />
+    <Compile Include="Controllers\LocalizationController.cs" />
+    <Compile Include="Converters\ListJoinConverter.cs" />
+    <Compile Include="DetailsPage.xaml.cs">
+      <DependentUpon>DetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GridViewAutoSortBehavior.cs" />
+    <Compile Include="LanguageManager.cs" />
+    <Compile Include="PluginSettingsDialog.xaml.cs">
+      <DependentUpon>PluginSettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\SearchTitleController.cs" />
+    <Compile Include="CommandLineArgs.cs" />
+    <Compile Include="IMovieFileNameGenerator.cs" />
+    <Compile Include="MovieFileNameGenerator.cs" />
+    <Compile Include="SearchPage.xaml.cs">
+      <DependentUpon>SearchPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SearchTitleControl.xaml.cs">
+      <DependentUpon>SearchTitleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsService.cs" />
+    <Compile Include="ShellNavigationBehavior.cs" />
+    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="Common\IWindow.cs" />
+    <Compile Include="Common\ObservableObject.cs" />
+    <Compile Include="Common\IController.cs" />
+    <Compile Include="Common\ViewModel.cs" />
+    <Compile Include="Converters\EmptyToVisibilityConverter.cs" />
+    <Compile Include="Converters\MultiJoinConverter.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\PluginSettingsViewModel.cs" />
+    <Compile Include="ViewModels\LanguageViewModel.cs" />
+    <Compile Include="ViewModels\LocalizationViewModel.cs" />
+    <Compile Include="ViewModels\MovieViewModel.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModels\RatingViewModel.cs" />
+    <Compile Include="ViewModels\SearchTitleViewModel.cs" />
+    <Page Include="DetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PluginSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SearchPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SearchTitleControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.ru-RU.resx" />
+    <None Include="app.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AllAboutMovie.Core.UI\AllAboutMovie.Core.UI.csproj">
+      <Project>{334DCB66-1776-4705-B73D-8B0853492573}</Project>
+      <Name>AllAboutMovie.Core.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AllAboutMovie.Core\AllAboutMovie.Core.csproj">
+      <Project>{8E9AB576-C78B-47A0-9825-BEC01FACFE12}</Project>
+      <Name>AllAboutMovie.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AllAboutMovie.Utils\AllAboutMovie.Utils.csproj">
+      <Project>{F1E652F2-FA97-41C8-A401-FF069394FB72}</Project>
+      <Name>AllAboutMovie.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\movie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\mpaa-g.gif" />
+    <Resource Include="Resources\mpaa-nc17.gif" />
+    <Resource Include="Resources\mpaa-pg.gif" />
+    <Resource Include="Resources\mpaa-pg13.gif" />
+    <Resource Include="Resources\mpaa-r.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\oscar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\rus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\enu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\translit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\no-poster.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\movie_small.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,219 @@
+﻿<Page x:Class="AllAboutMovie.SearchPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:extToolkit="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended" 
+      xmlns:ViewModels="clr-namespace:AllAboutMovie.ViewModels" 
+      xmlns:AllAboutMovie="clr-namespace:AllAboutMovie" 
+      xmlns:Properties="clr-namespace:AllAboutMovie.Properties" xmlns:Converters="clr-namespace:AllAboutMovie.Converters" mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300">
+    <Page.Resources>
+        <Converters:EmptyToVisibilityConverter x:Key="EmptyToCollapsedConv" />
+        <Converters:EmptyToVisibilityConverter x:Key="EmptyToVisibleConv" EmptyVisibility="Visible" NonEmptyVisibility="Collapsed" />
+        <ControlTemplate x:Key="ValidationTemplate">
+            <DockPanel>
+                <AdornedElementPlaceholder/>
+                <TextBlock Foreground="Red" FontSize="20" Margin="2,0,0,0">!</TextBlock>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="TextBoxWithErrorStyle" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" 
+                            Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Margin="0,10,0,10" MaxWidth="600">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <TextBlock FontSize="16" Text="{x:Static Properties:Resources.SearchPageTitle}" />
+                <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" Text="{x:Static Properties:Resources.SearchPageHelp}" />
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="{x:Static Properties:Resources.SearchTitle}" />
+                    <AllAboutMovie:SearchTitleControl Grid.Row="0" Grid.Column="1" DataContext="{Binding SearchTitle}" />
+                    <Label Margin="0,5,0,0" Grid.Row="1" Grid.Column="0" Content="{x:Static Properties:Resources.SearchYear}" />
+                    <TextBox Margin="0,5,0,0" Grid.Row="1" Grid.Column="1" Width="80"
+                             HorizontalAlignment="Left"
+                             Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                             Style="{StaticResource TextBoxWithErrorStyle}"
+                             Text="{Binding SearchYear, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                </Grid>
+                <Separator Margin="0,5,0,0" />
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="{x:Static Properties:Resources.MoviesCatalog}" />
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Catalogs}" SelectedValuePath="Name" SelectedValue="{Binding SelectedCatalogName}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Margin="0,2,0,0" Source="{Binding IconUri}" />
+                                    <TextBlock Margin="6,1,0,0" Text="{Binding Name}"  />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Grid.Column="2" Margin="5,0,0,0" IsDefault="True"  MinWidth="60" Content="{x:Static Properties:Resources.Search}" Command="{Binding Controller.SearchCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </StackPanel>
+            <GroupBox x:Name="group" Margin="0,8,0,0" Grid.Row="1" Header="{x:Static Properties:Resources.FoundMovies}">
+                <extToolkit:BusyIndicator Grid.Row="1" IsBusy="{Binding IsLoading}" BusyContent="{Binding}">
+                    <extToolkit:BusyIndicator.BusyContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="4" Orientation="Horizontal" HorizontalAlignment="Center" Cursor="Arrow">
+                                <TextBlock Text="{Binding LoadMessage}" FontWeight="Bold" VerticalAlignment="Center" />
+                                <Button Content="{x:Static Properties:Resources.Cancel}" 
+                                        Command="{Binding Controller.CancelCommand}"                                         
+                                        VerticalAlignment="Center" Margin="6,0,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </extToolkit:BusyIndicator.BusyContentTemplate>
+                    <Grid Margin="2">
+                        <ListView ItemsSource="{Binding FoundMovies}" SelectedValuePath="ID" SelectionMode="Single"
+                              SelectedValue="{Binding SelectedMovieID, Mode=TwoWay}" 
+                              VerticalAlignment="Stretch"
+                              Visibility="{Binding FoundMovies, Converter={StaticResource EmptyToCollapsedConv}}">
+                            <!--
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="#" DisplayMemberBinding="{Binding Index}" AllAboutMovie:GridViewAutoSortBehavior.PropertyName="Index" />
+                                    <GridViewColumn Header="{x:Static Properties:Resources.Title}" AllAboutMovie:GridViewAutoSortBehavior.PropertyName="Title">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type ViewModels:MovieViewModel}">
+                                                <TextBlock>
+                                                    <Run FontWeight="Bold" Text="{Binding Title, Mode=OneWay}" />
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="{x:Static Properties:Resources.Year}" AllAboutMovie:GridViewAutoSortBehavior.PropertyName="Year">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type ViewModels:MovieViewModel}">
+                                                <TextBlock FontWeight="Bold" Text="{Binding Year}">
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="{x:Static Properties:Resources.Director}" DisplayMemberBinding="{Binding DirectorsStringOrUnknown}" />
+                                    <GridViewColumn Header="{x:Static Properties:Resources.Country}" DisplayMemberBinding="{Binding CountriesStringOrUnknown}" />
+                                    <GridViewColumn Header="{x:Static Properties:Resources.Hyperlink}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type ViewModels:MovieViewModel}">
+                                                <TextBlock>
+                                                <Hyperlink NavigateUri="{Binding Url, Mode=OneWay}" ToolTip="{Binding Url, Mode=OneWay}" AllAboutMovie:ShellNavigationBehavior.Enabled="true"><Run Text="{x:Static Properties:Resources.Hyperlink}" /></Hyperlink>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                            -->
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="GoToDetails" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate DataType="{x:Type ViewModels:MovieViewModel}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Image Grid.Column="0" Margin="1" Width="32" Stretch="Uniform" Source="{Binding ThumbnailUrl, IsAsync=True}" />
+                                        <StackPanel Margin="2,0,0,0" Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock FontWeight="Bold" FontSize="13">
+                                                <Hyperlink NavigateUri="{Binding Url, Mode=OneWay}" ToolTip="{Binding Url, Mode=OneWay}" AllAboutMovie:ShellNavigationBehavior.Enabled="true"><Run Text="{Binding Title, Mode=OneWay}" /></Hyperlink> <Run Text="{Binding Year, Mode=OneWay, StringFormat=({0})}" />
+                                                </TextBlock>
+                                            <TextBlock Margin="0,0,0,0" Foreground="Gray" FontStyle="Italic" Text="{Binding Path=GenresStringOrNull}" Visibility="{Binding Path=GenresStringOrNull, Converter={StaticResource EmptyToCollapsedConv}}" />
+                                            <TextBlock Foreground="Gray">
+                                                <Run FontWeight="Bold" Text="{Binding Path=CountriesStringOrEmpty, Mode=OneWay}" /><Run Text="{x:Static Properties:Resources.Director}" />: <Run FontWeight="Bold" Text="{Binding DirectorsStringOrUnknown, Mode=OneWay}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray" 
+                                   Text="{x:Static Properties:Resources.MovieNotFound}" Visibility="{Binding FoundMovies, Converter={StaticResource EmptyToVisibleConv}}" />-->
+                    </Grid>
+                </extToolkit:BusyIndicator>
+                <GroupBox.Style>
+                    <Style TargetType="{x:Type GroupBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                <Setter Property="Cursor" Value="{x:Static Cursors.Wait}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </GroupBox.Style>
+            </GroupBox>
+        </Grid>
+        <Separator Grid.Row="1" />
+        <Grid Grid.Row="2" Margin="0,10,0,10" MaxWidth="600">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" DataContext="{Binding Localization}">
+                <TextBlock VerticalAlignment="Center"><Run Text="{x:Static Properties:Resources.Language}"/>:</TextBlock>
+                <ComboBox Margin="5,0,0,0" ItemsSource="{Binding Languages}" SelectedValuePath="CultureName" SelectedValue="{Binding SelectedCultureName}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Image Margin="0,3,0,0" Source="{Binding CultureFlagUrl}" />
+                                <TextBlock Margin="6,1,0,0" Text="{Binding Name}"  />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <Button Grid.Column="2" Margin="0,0,0,0" Content="{x:Static Properties:Resources.GoToDetails}" MinWidth="80" Height="25" Command="{Binding Controller.GoToDetailsCommand}" />
+            <Button Grid.Column="3" Margin="10,0,0,0" IsCancel="True" Content="{x:Static Properties:Resources.Exit}" MinWidth="80" Height="25" Command="{Binding Controller.ExitCommand}" />
+        </Grid>
+    </Grid>
+</Page>

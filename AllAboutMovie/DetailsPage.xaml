@@ -1,0 +1,114 @@
+﻿<Page x:Class="AllAboutMovie.DetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Core="clr-namespace:AllAboutMovie.Core;assembly=AllAboutMovie.Core" xmlns:ViewModels="clr-namespace:AllAboutMovie.ViewModels" xmlns:Properties="clr-namespace:AllAboutMovie.Properties" xmlns:AllAboutMovie="clr-namespace:AllAboutMovie" xmlns:Converters="clr-namespace:AllAboutMovie.Converters" mc:Ignorable="d"
+      d:DesignHeight="300" d:DesignWidth="300">
+    <Page.Resources>
+        <DataTemplate DataType="{x:Type Core:Person}">
+            <TextBlock><Hyperlink NavigateUri="{Binding Url}" ToolTip="{Binding Url, Mode=OneWay}" AllAboutMovie:ShellNavigationBehavior.Enabled="true"><Run Text="{Binding Name, Mode=OneWay}" /></Hyperlink></TextBlock>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:RatingViewModel}">
+            <TextBlock><Run FontWeight="Bold" Text="{Binding RatedBy, Mode=OneWay}" />: <Run Text="{Binding ValueString, Mode=OneWay}" /></TextBlock>
+        </DataTemplate>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConv" />
+        <Converters:EmptyToVisibilityConverter x:Key="EmptyToVisConv" />
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Margin="0,10,0,10" MaxWidth="600" DataContext="{Binding Movie}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Image VerticalAlignment="Center" Stretch="None" Source="/Resources/oscar.png" Visibility="{Binding WonOscar, Converter={StaticResource BoolToVisConv}}" ToolTip="{x:Static Properties:Resources.Oscar}" />
+                <TextBlock TextWrapping="Wrap">
+                    <Hyperlink FontSize="18" NavigateUri="{Binding Url}" ToolTip="{Binding Url}" AllAboutMovie:ShellNavigationBehavior.Enabled="true"><Run Text="{Binding Title, Mode=OneWay}"/></Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="50" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontSize="11" FontStyle="Italic" Text="{Binding Slogan, Mode=OneWay}" />
+                <TextBlock Grid.Row="1"><Run Text="{x:Static Properties:Resources.Year}" />: <Run FontWeight="Bold" Text="{Binding Year, Mode=OneWay}" /></TextBlock>
+                <TextBlock Grid.Row="2"><Run Text="{x:Static Properties:Resources.Country}" />: <Run FontWeight="Bold" Text="{Binding CountriesString, Mode=OneWay}" /></TextBlock>
+                <TextBlock Grid.Row="3"><Run Text="{x:Static Properties:Resources.Genre}" />: <Run FontWeight="Bold" Text="{Binding GenresString, Mode=OneWay}" /></TextBlock>
+                <TextBlock Grid.Row="4" Visibility="{Binding RuntimeInMinutesOrEmpty, Converter={StaticResource EmptyToVisConv}}"><Run Text="{x:Static Properties:Resources.Runtime}" />: <Run FontWeight="Bold" Text="{Binding RuntimeHourMinutes, Mode=OneWay}" /> (<Run Text="{Binding RuntimeInMinutes, Mode=OneWay}" /> <Run Text="{x:Static Properties:Resources.MinutesShort}" />)</TextBlock>
+                <TextBlock Grid.Row="5" Visibility="{Binding Budget, Converter={StaticResource EmptyToVisConv}}"><Run Text="{x:Static Properties:Resources.Budget}" />: <Run FontWeight="Bold" Text="{Binding Budget, Mode=OneWay}" /></TextBlock>
+                <Separator Grid.Row="6" />
+                <TextBlock Grid.Row="7" Visibility="{Binding Directors, Converter={StaticResource EmptyToVisConv}}"><Run Text="{x:Static Properties:Resources.Director}" />:</TextBlock>
+                <ItemsControl Grid.Row="8" Margin="10,0,0,0" Visibility="{Binding Directors, Converter={StaticResource EmptyToVisConv}}" ItemsSource="{Binding Directors}" />
+                <TextBlock Grid.Row="9"><Run Text="{x:Static Properties:Resources.Actors}" />:</TextBlock>
+                <ScrollViewer Grid.Row="10" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl Margin="10,0,0,0" ItemsSource="{Binding Actors}" />
+                </ScrollViewer>
+                <Separator Grid.Row="11" />
+                <TextBlock Grid.Row="12"><Run Text="{x:Static Properties:Resources.Rating}" />:</TextBlock>
+                <ItemsControl Grid.Row="13" Margin="10,0,0,0" ItemsSource="{Binding Ratings}" />
+                <Border Grid.Row="1" Grid.Column="1" Grid.RowSpan="12" Margin="10,0,0,10" BorderThickness="0" BorderBrush="Gray">
+                    <Image Margin="10,5,0,10" Stretch="Uniform" Source="{Binding PosterUrl, IsAsync=True}" />
+                </Border>
+                <Image Grid.Row="13" VerticalAlignment="Top" Grid.Column="1" Margin="10,0,0,0" Source="{Binding MPAALogoUri}" Stretch="None" />
+            </Grid>
+            <TextBox Margin="0,5,0,0" MinHeight="90" IsReadOnly="True" TextWrapping="Wrap" Grid.Row="2" Text="{Binding Storyline, Mode=OneWay}" />
+        </Grid>
+        <Separator Grid.Row="2" />
+        <Grid Grid.Row="3" Margin="0,10,0,10" MaxWidth="600">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <ComboBox MinWidth="80" ItemsSource="{Binding Exporters}" SelectedValuePath="Name" SelectedValue="{Binding SelectedExporterName}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding IconUri}" />
+                                <TextBlock Margin="6,0,0,0" Text="{Binding Name}"  />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Margin="2,0,0,0" Content="{x:Static Properties:Resources.Export}" MinWidth="80" Height="25" Command="{Binding Controller.ExportCommand}" />
+            </StackPanel>
+            <Button Grid.Column="2" Margin="0,0,0,0" Content="{x:Static Properties:Resources.GoToSearch}" MinWidth="80" Height="25" Command="{Binding Controller.GoToSearchCommand}" />
+            <Button Grid.Column="3" Margin="10,0,0,0" IsCancel="True" Content="{x:Static Properties:Resources.Exit}" MinWidth="80" Height="25" Command="{Binding Controller.ExitCommand}" />
+        </Grid>
+    </Grid>
+</Page>
